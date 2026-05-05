@@ -1,20 +1,24 @@
 import psycopg2
+import os
+
+os.environ['PGCLIENTENCODING'] = 'utf-8'
 
 def connect_to_db():
     try:
-        conn = psycopg2.connect (
-            host = "localhost",
-            user = "postger",
-            bdname = "sfmshop",
-            password = "bdokean123"
+        conn = psycopg2.connect(
+            host="localhost",
+            user="postgres",
+            dbname="sfmshop",
+            password="bdokean123",
+            client_encoding="utf-8"
         )
         return conn
     except Exception as e:
-        print("Нет подключения к бд, ошибка:", e)
-        return None        
+        print("DB connection error:", e)
+        return None     
 
 
-def creat_author (conn, name, surname, country):
+def create_author(conn, name, surname, country):
     try:
         with conn.cursor() as cursor:
             cursor.executr (
@@ -38,7 +42,7 @@ def creat_author (conn, name, surname, country):
         return None
     
     
-def get_all_author(conn):
+def get_all_authors(conn):
     with conn.cursor() as cursor:
         cursor.execute ("select id, name, surname, country from author")
         rows = cursor.fetchone()
